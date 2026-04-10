@@ -1,0 +1,48 @@
+{{- if .Values.analyzer.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "daily-stock-analysis.fullname" . }}-analyzer
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "daily-stock-analysis.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.analyzer.schedule }}"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: analyzer
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              command: {{ .Values.analyzer.command | toJson }}
+              envFrom:
+                - configMapRef:
+                    name: {{ include "daily-stock-analysis.fullname" . }}-config
+                - secretRef:
+                    name: {{ .Values.secret.name }}
+              volumeMounts:
+                - name: data-volume
+                  mountPath: /app/data
+                - name: logs-volume
+                  mountPath: /app/logs
+                - name: reports-volume
+                  mountPath: /app/reports
+              resources:
+                {{- toYaml .Values.resources.analyzer | nindent 14 }}
+          volumes:
+            - name: data-volume
+              persistentVolumeClaim:
+                claimName: {{ include "daily-stock-analysis.fullname" . }}-data
+            - name: logs-volume
+              persistentVolumeClaim:
+                claimName: {{ include "daily-stock-analysis.fullname" . }}-logs
+            - name: reports-volume
+              persistentVolumeClaim:
+                claimName: {{ include "daily-stock-analysis.fullname" . }}-reports
+{{- end }}

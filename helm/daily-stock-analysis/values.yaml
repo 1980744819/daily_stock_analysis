@@ -1,0 +1,54 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/zhuslinsen/daily_stock_analysis
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+analyzer:
+  enabled: true
+  schedule: "0 10 * * 1-5"
+  command: ["python", "main.py", "--schedule"]
+
+server:
+  enabled: true
+  replicas: 1
+  command: ["python", "main.py", "--serve-only", "--host", "0.0.0.0", "--port", "8000"]
+
+service:
+  type: NodePort
+  port: 8000
+  nodePort: 30080
+
+persistence:
+  enabled: true
+  storageClass: ""
+  dataSize: 1Gi
+  logsSize: 512Mi
+  reportsSize: 2Gi
+
+resources:
+  analyzer:
+    limits:
+      memory: 512Mi
+      cpu: 500m
+    requests:
+      memory: 128Mi
+      cpu: 50m
+  server:
+    limits:
+      memory: 1Gi
+      cpu: 1000m
+    requests:
+      memory: 128Mi
+      cpu: 50m
+
+env:
+  STOCK_LIST: "002487,601688,000831,300033,601138,000997,600363,601555,601988"
+  REPORT_TYPE: "full"
+  REPORT_LANGUAGE: "zh"
+  TZ: "Asia/Shanghai"
+  OPENAI_BASE_URL: "https://coding.dashscope.aliyuncs.com/v1"
+secret:
+  enabled: true
+  name: "daily-stock-analysis-secret"

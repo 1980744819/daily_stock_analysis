@@ -1,0 +1,44 @@
+{{- if .Values.persistence.enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "daily-stock-analysis.fullname" . }}-data
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "daily-stock-analysis.labels" . | nindent 4 }}
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: {{ .Values.persistence.storageClass | default "local-path" }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.dataSize }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "daily-stock-analysis.fullname" . }}-logs
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "daily-stock-analysis.labels" . | nindent 4 }}
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: {{ .Values.persistence.storageClass | default "local-path" }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.logsSize }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "daily-stock-analysis.fullname" . }}-reports
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "daily-stock-analysis.labels" . | nindent 4 }}
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: {{ .Values.persistence.storageClass | default "local-path" }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.reportsSize }}
+{{- end }}

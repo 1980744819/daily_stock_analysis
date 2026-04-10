@@ -1,0 +1,14 @@
+apiVersion: v2
+name: daily-stock-analysis
+description: 股票智能分析系统 - Helm Chart for k3s
+type: application
+version: 0.1.0
+appVersion: "latest"
+keywords:
+  - stock
+  - analysis
+  - ai
+  - finance
+maintainers:
+  - name: ZhuLinsen
+    url: https://github.com/ZhuLinsen
