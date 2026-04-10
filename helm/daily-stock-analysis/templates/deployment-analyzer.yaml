@@ -34,7 +34,12 @@ spec:
                 - name: reports-volume
                   mountPath: /app/reports
               resources:
-                {{- toYaml .Values.resources.analyzer | nindent 14 }}
+                limits:
+                  cpu: {{ .Values.resources.analyzer.limits.cpu }}
+                  memory: {{ .Values.resources.analyzer.limits.memory }}
+                requests:
+                  cpu: {{ .Values.resources.analyzer.requests.cpu }}
+                  memory: {{ .Values.resources.analyzer.requests.memory }}
           volumes:
             - name: data-volume
               persistentVolumeClaim:
