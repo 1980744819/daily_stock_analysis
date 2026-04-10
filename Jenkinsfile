@@ -119,9 +119,6 @@ pipeline {
 
                     echo "开始部署应用到 Kubernetes..."
 
-                    # 先检查并创建 namespace
-                    kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
-
                     # Helm 部署
                     helm upgrade --install ${PROJECT} ${HELM_CHART_PATH} \
                         --namespace ${NAMESPACE} \
