@@ -7,9 +7,11 @@ To learn more about the release, try:
   $ helm status {{ .Release.Name }} -n {{ .Release.Namespace }}
   $ helm get all {{ .Release.Name }} -n {{ .Release.Namespace }}
 
-**IMPORTANT: Before installing this chart, you must apply the external secret first:**
+**IMPORTANT: This chart requires an external Secret and will fail fast if it is missing:**
 
   $ kubectl apply -f /path/to/secret-external.yaml -n {{ .Release.Namespace }}
+
+  Secret name expected by this chart: {{ .Values.secret.name }}
 
 **To uninstall:**
 

@@ -51,4 +51,7 @@ env:
   OPENAI_BASE_URL: "https://coding.dashscope.aliyuncs.com/v1"
 secret:
   enabled: true
+  # External secret only mode:
+  # create this Kubernetes Secret before helm install/upgrade.
+  # Example: kubectl apply -f secret-external.yaml -n <namespace>
   name: "daily-stock-analysis-secret"

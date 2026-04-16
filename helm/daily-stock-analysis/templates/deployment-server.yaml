@@ -1,4 +1,5 @@
 {{- if .Values.server.enabled }}
+{{- include "daily-stock-analysis.validateSecretConfig" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

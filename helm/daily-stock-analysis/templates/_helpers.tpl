@@ -47,3 +47,15 @@ Selector labels
 app.kubernetes.io/name: {{ include "daily-stock-analysis.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Validate required external secret settings.
+*/}}
+{{- define "daily-stock-analysis.validateSecretConfig" -}}
+{{- if .Values.secret.enabled -}}
+{{- $secretName := required "values.secret.name is required when values.secret.enabled=true" .Values.secret.name -}}
+{{- if eq (trim $secretName) "" -}}
+{{- fail "values.secret.name cannot be empty when values.secret.enabled=true" -}}
+{{- end -}}
+{{- end -}}
+{{- end }}

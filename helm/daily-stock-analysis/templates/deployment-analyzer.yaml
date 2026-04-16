@@ -1,4 +1,5 @@
 {{- if .Values.analyzer.enabled }}
+{{- include "daily-stock-analysis.validateSecretConfig" . }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
